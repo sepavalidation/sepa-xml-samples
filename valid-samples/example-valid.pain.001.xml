@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03 ../schemas/pain.001.001.03.xsd">
+  <CstmrCdtTrfInitn>
+
+    <GrpHdr>
+      <MsgId>MSG-20240115-001</MsgId>
+      <CreDtTm>2024-01-15T10:00:00</CreDtTm>
+      <NbOfTxs>4</NbOfTxs>
+      <CtrlSum>8350.00</CtrlSum>
+      <InitgPty>
+        <Nm>ACME Corporation GmbH</Nm>
+      </InitgPty>
+    </GrpHdr>
+
+    <!-- Payment block 1: EEA transfers (DE → FR, DE → NL) — no BIC required -->
+    <PmtInf>
+      <PmtInfId>PMT-EEA-001</PmtInfId>
+      <PmtMtd>TRF</PmtMtd>
+      <!-- Required before Dbtr per pain.001.001.03 sequence; future date avoids past-date business rule in tests -->
+      <ReqdExctnDt>2030-12-31</ReqdExctnDt>
+      <Dbtr>
+        <Nm>ACME Corporation GmbH</Nm>
+      </Dbtr>
+      <DbtrAcct>
+        <Id><IBAN>DE89370400440532013000</IBAN></Id>
+      </DbtrAcct>
+      <DbtrAgt>
+        <FinInstnId><BIC>COBADEFFXXX</BIC></FinInstnId>
+      </DbtrAgt>
+
+      <!-- Transaction 1: Valid EEA transfer to France -->
+      <CdtTrfTxInf>
+        <PmtId><EndToEndId>E2E-001-FR</EndToEndId></PmtId>
+        <Amt><InstdAmt Ccy="EUR">1500.00</InstdAmt></Amt>
+        <CdtrAgt>
+          <FinInstnId><BIC>BNPAFRPPXXX</BIC></FinInstnId>
+        </CdtrAgt>
+        <Cdtr><Nm>Jean Dupont SARL</Nm></Cdtr>
+        <CdtrAcct>
+          <Id><IBAN>FR7630006000011234567890189</IBAN></Id>
+        </CdtrAcct>
+        <RmtInf><Ustrd>Invoice INV-2024-0042 payment</Ustrd></RmtInf>
+      </CdtTrfTxInf>
+
+      <!-- Transaction 2: Valid EEA transfer to Netherlands -->
+      <CdtTrfTxInf>
+        <PmtId><EndToEndId>E2E-002-NL</EndToEndId></PmtId>
+        <Amt><InstdAmt Ccy="EUR">2200.00</InstdAmt></Amt>
+        <CdtrAgt>
+          <FinInstnId><BIC>INGBNL2AXXX</BIC></FinInstnId>
+        </CdtrAgt>
+        <Cdtr><Nm>Dutch Supplies BV</Nm></Cdtr>
+        <CdtrAcct>
+          <Id><IBAN>NL91ABNA0417164300</IBAN></Id>
+        </CdtrAcct>
+        <RmtInf><Ustrd>PO-2024-0099 goods delivery Q1</Ustrd></RmtInf>
+      </CdtTrfTxInf>
+    </PmtInf>
+
+    <!-- Payment block 2: Non-EEA transfer (DE → GB) — BIC required -->
+    <PmtInf>
+      <PmtInfId>PMT-NON-EEA-001</PmtInfId>
+      <PmtMtd>TRF</PmtMtd>
+      <ReqdExctnDt>2030-12-31</ReqdExctnDt>
+      <Dbtr>
+        <Nm>ACME Corporation GmbH</Nm>
+      </Dbtr>
+      <DbtrAcct>
+        <Id><IBAN>DE89370400440532013000</IBAN></Id>
+      </DbtrAcct>
+      <DbtrAgt>
+        <FinInstnId><BIC>COBADEFFXXX</BIC></FinInstnId>
+      </DbtrAgt>
+
+      <!-- Transaction 3: Valid non-EEA transfer to UK with BIC present -->
+      <CdtTrfTxInf>
+        <PmtId><EndToEndId>E2E-003-GB</EndToEndId></PmtId>
+        <Amt><InstdAmt Ccy="GBP">3500.00</InstdAmt></Amt>
+        <CdtrAgt>
+          <FinInstnId><BIC>NWBKGB2LXXX</BIC></FinInstnId>
+        </CdtrAgt>
+        <Cdtr><Nm>London Trading Ltd</Nm></Cdtr>
+        <CdtrAcct>
+          <Id><IBAN>GB29NWBK60161331926819</IBAN></Id>
+        </CdtrAcct>
+        <RmtInf><Ustrd>Contract CT-2024-007 milestone 2 payment</Ustrd></RmtInf>
+      </CdtTrfTxInf>
+
+      <!-- Transaction 4: Valid domestic transfer with long-but-within-limit remittance -->
+      <CdtTrfTxInf>
+        <PmtId><EndToEndId>E2E-004-DE</EndToEndId></PmtId>
+        <Amt><InstdAmt Ccy="EUR">1150.00</InstdAmt></Amt>
+        <CdtrAgt>
+          <FinInstnId><BIC>DEUTDEDBXXX</BIC></FinInstnId>
+        </CdtrAgt>
+        <Cdtr><Nm>Berlin Consulting AG</Nm></Cdtr>
+        <CdtrAcct>
+          <Id><IBAN>DE75512108001245126199</IBAN></Id>
+        </CdtrAcct>
+        <!-- Exactly 140 characters — boundary test for remittance rule -->
+        <RmtInf><Ustrd>Consulting services January 2024 - Project Alpha phase 1 deliverables as per SOW-2024-001 signed on 2024-01-01 ref PROJ-ALPHA-P1</Ustrd></RmtInf>
+      </CdtTrfTxInf>
+    </PmtInf>
+
+  </CstmrCdtTrfInitn>
+</Document>

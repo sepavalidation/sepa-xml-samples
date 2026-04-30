@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Intentional XSD failure for manual / integration testing:
+  <NbOfTxs> is mandatory in GrpHdr (pain.001.001.03) but omitted here.
+  The validation pipeline must stop at schema (CRITICAL) and not run business rules.
+-->
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03 ../schemas/pain.001.001.03.xsd">
+  <CstmrCdtTrfInitn>
+
+    <GrpHdr>
+      <MsgId>MSG-SCHEMA-ERR-001</MsgId>
+      <CreDtTm>2024-01-15T10:00:00</CreDtTm>
+      <!-- SCHEMA ERROR: missing required <NbOfTxs> (and misplaced CtrlSum would also fail sequence) -->
+      <CtrlSum>8350.00</CtrlSum>
+      <InitgPty>
+        <Nm>ACME Corporation GmbH</Nm>
+      </InitgPty>
+    </GrpHdr>
+
+    <PmtInf>
+      <PmtInfId>PMT-SCHEMA-001</PmtInfId>
+      <PmtMtd>TRF</PmtMtd>
+      <ReqdExctnDt>2030-12-31</ReqdExctnDt>
+      <Dbtr>
+        <Nm>ACME Corporation GmbH</Nm>
+      </Dbtr>
+      <DbtrAcct>
+        <Id><IBAN>DE89370400440532013000</IBAN></Id>
+      </DbtrAcct>
+      <DbtrAgt>
+        <FinInstnId><BIC>COBADEFFXXX</BIC></FinInstnId>
+      </DbtrAgt>
+
+      <CdtTrfTxInf>
+        <PmtId><EndToEndId>E2E-SCHEMA-001</EndToEndId></PmtId>
+        <Amt><InstdAmt Ccy="EUR">8350.00</InstdAmt></Amt>
+        <CdtrAgt>
+          <FinInstnId><BIC>BNPAFRPPXXX</BIC></FinInstnId>
+        </CdtrAgt>
+        <Cdtr><Nm>Jean Dupont SARL</Nm></Cdtr>
+        <CdtrAcct>
+          <Id><IBAN>FR7630006000011234567890189</IBAN></Id>
+        </CdtrAcct>
+        <RmtInf><Ustrd>Single transfer — file still invalid at XSD level</Ustrd></RmtInf>
+      </CdtTrfTxInf>
+    </PmtInf>
+
+  </CstmrCdtTrfInitn>
+</Document>

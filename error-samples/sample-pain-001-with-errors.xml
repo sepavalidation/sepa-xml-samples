@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Public sample: structurally valid pain.001.001.03 (XSD passes) with logical errors.
+  Shipped for one-click download in the app ("Quick start" under the drop zone).
+-->
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03 ../schemas/pain.001.001.03.xsd">
+  <CstmrCdtTrfInitn>
+
+    <GrpHdr>
+      <MsgId>MSG-MANY-ERR-001</MsgId>
+      <!-- Far future: triggers business rule on creation date/time -->
+      <CreDtTm>2099-06-01T10:00:00</CreDtTm>
+      <!-- Wrong count and wrong sum versus the six transactions below -->
+      <NbOfTxs>1</NbOfTxs>
+      <CtrlSum>99999.00</CtrlSum>
+      <InitgPty>
+        <Nm>ACME Corporation GmbH</Nm>
+      </InitgPty>
+    </GrpHdr>
+
+    <PmtInf>
+      <PmtInfId>PMT-MANY-ERR-001</PmtInfId>
+      <PmtMtd>TRF</PmtMtd>
+      <!-- Past calendar date (UTC): triggers requested execution date rule -->
+      <ReqdExctnDt>2000-01-15</ReqdExctnDt>
+      <Dbtr>
+        <Nm>ACME Corporation GmbH</Nm>
+      </Dbtr>
+      <DbtrAcct>
+        <!-- Invalid IBAN checksum (last digit flipped vs valid DE test IBAN) -->
+        <Id><IBAN>DE89370400440532013001</IBAN></Id>
+      </DbtrAcct>
+      <DbtrAgt>
+        <!-- XSD-valid BIC (business rules still flag debtor IBAN below) -->
+        <FinInstnId><BIC>COBADEFFXXX</BIC></FinInstnId>
+      </DbtrAgt>
+
+      <!-- 1: Invalid creditor IBAN checksum -->
+      <CdtTrfTxInf>
+        <PmtId><EndToEndId>E2E-MULTI-01</EndToEndId></PmtId>
+        <Amt><InstdAmt Ccy="EUR">100.00</InstdAmt></Amt>
+        <CdtrAgt>
+          <FinInstnId><BIC>BNPAFRPPXXX</BIC></FinInstnId>
+        </CdtrAgt>
+        <Cdtr><Nm>Jean Dupont SARL</Nm></Cdtr>
+        <CdtrAcct>
+          <Id><IBAN>FR7630006000011234567890000</IBAN></Id>
+        </CdtrAcct>
+        <RmtInf><Ustrd>Invoice INV-2024-0042</Ustrd></RmtInf>
+      </CdtTrfTxInf>
+
+      <!-- 2: Valid row (XSD maxLength 140 on Ustrd — stay within schema to reach business rules) -->
+      <CdtTrfTxInf>
+        <PmtId><EndToEndId>E2E-MULTI-02</EndToEndId></PmtId>
+        <Amt><InstdAmt Ccy="EUR">100.00</InstdAmt></Amt>
+        <CdtrAgt>
+          <FinInstnId><BIC>INGBNL2AXXX</BIC></FinInstnId>
+        </CdtrAgt>
+        <Cdtr><Nm>Dutch Supplies BV</Nm></Cdtr>
+        <CdtrAcct>
+          <Id><IBAN>NL91ABNA0417164300</IBAN></Id>
+        </CdtrAcct>
+        <RmtInf><Ustrd>PO-2024-0099 goods delivery Q1</Ustrd></RmtInf>
+      </CdtTrfTxInf>
+
+      <!-- 3: UK (non-EEA) creditor without BIC -->
+      <CdtTrfTxInf>
+        <PmtId><EndToEndId>E2E-MULTI-03</EndToEndId></PmtId>
+        <Amt><InstdAmt Ccy="GBP">100.00</InstdAmt></Amt>
+        <CdtrAgt>
+          <FinInstnId />
+        </CdtrAgt>
+        <Cdtr><Nm>London Trading Ltd</Nm></Cdtr>
+        <CdtrAcct>
+          <Id><IBAN>GB29NWBK60161331926819</IBAN></Id>
+        </CdtrAcct>
+        <RmtInf><Ustrd>GB payment no BIC</Ustrd></RmtInf>
+      </CdtTrfTxInf>
+
+      <!-- 4: Invalid creditor IBAN checksum (valid BIC for XSD) -->
+      <CdtTrfTxInf>
+        <PmtId><EndToEndId>E2E-MULTI-04</EndToEndId></PmtId>
+        <Amt><InstdAmt Ccy="EUR">100.00</InstdAmt></Amt>
+        <CdtrAgt>
+          <FinInstnId><BIC>DEUTDEDBXXX</BIC></FinInstnId>
+        </CdtrAgt>
+        <Cdtr><Nm>Berlin Consulting AG</Nm></Cdtr>
+        <CdtrAcct>
+          <Id><IBAN>DE89370400440532013001</IBAN></Id>
+        </CdtrAcct>
+        <RmtInf><Ustrd>Another invalid IBAN row</Ustrd></RmtInf>
+      </CdtTrfTxInf>
+
+      <!-- 5: Valid-looking transfer (no extra rule on this row) -->
+      <CdtTrfTxInf>
+        <PmtId><EndToEndId>E2E-MULTI-05</EndToEndId></PmtId>
+        <Amt><InstdAmt Ccy="EUR">100.00</InstdAmt></Amt>
+        <CdtrAgt>
+          <FinInstnId><BIC>DEUTDEDBXXX</BIC></FinInstnId>
+        </CdtrAgt>
+        <Cdtr><Nm>Local Vendor GmbH</Nm></Cdtr>
+        <CdtrAcct>
+          <Id><IBAN>DE75512108001245126199</IBAN></Id>
+        </CdtrAcct>
+        <RmtInf><Ustrd>OK row</Ustrd></RmtInf>
+      </CdtTrfTxInf>
+
+      <!-- 6: Another invalid creditor IBAN checksum -->
+      <CdtTrfTxInf>
+        <PmtId><EndToEndId>E2E-MULTI-06</EndToEndId></PmtId>
+        <Amt><InstdAmt Ccy="EUR">100.00</InstdAmt></Amt>
+        <CdtrAgt>
+          <FinInstnId><BIC>DEUTDEDBXXX</BIC></FinInstnId>
+        </CdtrAgt>
+        <Cdtr><Nm>Another Creditor</Nm></Cdtr>
+        <CdtrAcct>
+          <Id><IBAN>DE89370400440532013001</IBAN></Id>
+        </CdtrAcct>
+        <RmtInf><Ustrd>Second bad IBAN</Ustrd></RmtInf>
+      </CdtTrfTxInf>
+    </PmtInf>
+
+  </CstmrCdtTrfInitn>
+</Document>

@@ -9,6 +9,7 @@ To securely validate your SEPA files without uploading them to any server (100% 
 ## Content
 - **Valid Samples:** Correct files for various banks.
 - **Invalid Samples:** Files with common schema errors (missing BIC, wrong IBAN format, invalid characters).
+- **Schemas**: Official `pain.001.001.03.xsd` for XSD validation.
 
 ## Legal
 These files are for testing purposes only. No real PII (Personally Identifiable Information) is included.
